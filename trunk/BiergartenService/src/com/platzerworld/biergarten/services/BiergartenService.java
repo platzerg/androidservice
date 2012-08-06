@@ -52,7 +52,51 @@ public class BiergartenService {
 		
 		EntityManager em = EMFService.get().createEntityManager();
 		Query q = em.createQuery("select b from Biergarten b");
+				
+		List<Biergarten> biergaerten = q.getResultList();
+		for (Biergarten biergarten : biergaerten) {
+			bg = new BiergartenVO();
+			bg.id = biergarten.id;
+			bg.name = biergarten.name;
+			bg.strasse = biergarten.strasse;
+			bg.plz = biergarten.plz;
+			bg.ort = biergarten.ort;
+			bg.telefon = biergarten.telefon;
+			bg.email = biergarten.email;
+			bg.url = biergarten.url;
+			bg.latitude = biergarten.latitude;
+			bg.longitude = biergarten.longitude;
+			bg.desc = biergarten.desc;
+			bg.desclong = biergarten.descLong;
+			bg.mass = biergarten.mass;
+			bg.apfelschorle = biergarten.apfelschorle;
+			bg.riesenbreze = biergarten.riesenbreze;
+			bg.obazda = biergarten.obazda;
+			bg.biermarke = biergarten.biermarke;
+			bg.lieblingsgericht = biergarten.lieblingsgericht;
+			bg.speisenkommentar = biergarten.speisekommentar;
+			bg.favorit = biergarten.favorit;
+			biergartenTOs.add(bg);
+		}
+		 
+		com.google.appengine.repackaged.com.google.gson.Gson gson = new com.google.appengine.repackaged.com.google.gson.Gson();
+		String data = gson.toJson(biergartenTOs);
 		
+		
+		return data;
+		
+	}
+	
+	@GET
+	@Produces("text/plain")
+	@Path("/holefavoriten")
+	public String getFavoriten() {
+		List<BiergartenVO> biergartenTOs = new ArrayList<BiergartenVO>();
+		BiergartenVO bg = null;
+		
+		EntityManager em = EMFService.get().createEntityManager();
+		Query q = em.createQuery("select b from Biergarten b where b.favorit=true");
+		//q.setParameter("myfavorit", "true");
 				
 		List<Biergarten> biergaerten = q.getResultList();
 		for (Biergarten biergarten : biergaerten) {
